@@ -1,0 +1,59 @@
+<?php 
+
+session_start();
+
+?>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<link rel='shortcut icon' href='./src/images/icon.ico'/>
+		<meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+
+		<link href='src/styles/login.css' rel='stylesheet'>
+		<title>Sol Nascente</title>
+	</head>
+	<body>
+		<div id='logoDiv'></div>
+		<div id='mainDiv'>		
+			<form method='post' onsubmit="return false">
+				<div id='formDiv'>
+					<p>Login</p>
+					<input type='text' name='_cpg' id='cpf' placeholder='cpf' autocomplete='off' required>
+					<input type='password' name='_password' id='password' placeholder='senha' required>
+                    <input type='submit' id='submit' value='Login!' onclick="ValidateLogin()">
+				</div>
+			</form>
+		</div>
+		<script>
+			function ValidateLogin(){
+				let cpf = document.getElementById('cpf').value
+				let password = document.getElementById('password').value
+				let request = new XMLHttpRequest()
+				let parameters = 'cpf=' + cpf + '&password='+ password;
+
+				request.open('POST', 'http://35.198.5.41:3000/resident/login')
+				request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+				request.onreadystatechange = function(){					
+					if(request.readyState === 4) {
+						if(request.status === 200 || request.status === 201) { 
+							const updateResponse = JSON.parse(request.response)
+							alert(request.response)
+							document.cookie = "id =" + updateResponse.id;
+							document.cookie = "accessToken =" + updateResponse.token;
+							if(updateResponse.profile != null){
+								document.cookie = "permission =" + updateResponse.profile;
+							}else{
+								document.cookie = "permission =" + updateResponse.perfil;
+							}
+							window.location = 'http://192.168.25.61:366/SolNascente/front-end/panel'
+						}else{
+							alert("Senha ou CPF inválidos")
+						}
+            		}
+				}
+				request.send(parameters)
+			}
+		</script>
+	</body>
+</html>

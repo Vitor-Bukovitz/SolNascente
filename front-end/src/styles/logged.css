@@ -1,5 +1,6 @@
     html {
     height: 100%;
+    overflow: auto;
     }
     
     body{
@@ -25,25 +26,18 @@
     text-align: center;
     font-size: 40px;
     }
-   
-   input{
-   width:100%;
-   height:50px;
-   font-size:15px;
-   border: solid 1px #c2c2c2;
-   outline: none;
-   margin-bottom:25px;
-   }
 
-   input[type='text'], input[type='password']{
-   padding-left: 10px;
-   }
+    input {
+        outline:none;
+    }
 
    input[type='submit']{    
     background-color:#e77000;
     color:#fff;
     border:0px;
     font-size:19px;
+    padding: 5px;
+    border-radius: 5px;
    }
 
    input[type='submit']:hover {
@@ -82,7 +76,7 @@
    }
 
    #innerPanel {
-        width:95%;
+        width:100%;
         margin:auto;
         height: 100%;
         display: flex;
@@ -92,7 +86,7 @@
    }
 
    .module{
-       width: 400px;
+       width: 25%;
        height: 225px;
        background-image: linear-gradient(135deg, #ebb400,#ff8800 );
        text-align: center;
@@ -137,8 +131,8 @@
        margin:auto;
        margin-top:25px;
        width:800px;
-       height:80%;
-       background-color: white;
+       height:90%;
+       background-color: rgb(240, 240, 240);
        border-radius: 7px;
    }
 
@@ -168,4 +162,31 @@
 
    #modalBackIcon:hover{
        cursor:pointer;
+   }
+
+   #modalContent{
+       width: 95%;
+       height: calc(100% - 60px);
+       background-color:white;
+       margin:auto;
+   }
+
+   #modalContent form{
+    margin:auto;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+   }
+
+   .modalInputDiv{
+       display: inline-block;
+       padding-top: 25px;
+       min-width: 95%;
+       display: flex;
+       justify-content: space-between;
+   }
+
+   .submitButton{
+    display: flex;
+    justify-content: center;
    }
