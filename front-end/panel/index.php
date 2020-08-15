@@ -162,7 +162,7 @@
         </div>
         <script>            
 
-            function ChangeUser(){
+            async function ChangeUser(){
 				let cpf = document.getElementById('changeUserCpf').value
                 let name = document.getElementById('changeUserName').value
                 let phone = document.getElementById('changeUserPhone').value
@@ -170,52 +170,29 @@
                 let blockNum = parseInt(document.getElementById('changeUserBlockNum').value)
                 let password = document.getElementById('changeUserPass').value
                 let profile = document.getElementById('changeUserProfile').value
-				let request = new XMLHttpRequest()
-                
-                let opts = JSON.stringify({
-                    name: String(name),
-                    password: String(password),
-                    cpf:  String(cpf),
-                    telephone: String(phone),
-                    number: Number(houseNum),
-                    block: Number(blockNum),
-                    profile: String(profile)
+
+                const payload = JSON.stringify({
+                    name,
+                    password,
+                    cpf,
+                    telephone: phone,
+                    number: houseNum,
+                    block: blockNum,
+                    profile: 'morador',
                 })
 
-                fetch('http://35.198.5.41:3000/resident/new', {
+               let response = await fetch('http://localhost:3000/resident/new', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
                     method: 'post',
-                    body: opts
-                }).then(function(response) {
-                    return response.json();
-                }).then(function(result){
-                    alert(Object.entries(result))
+                    body: payload,
                 })
 
-                parameters = "name=" + name + "&password=" + password + "&cpf=" + cpf + "&telephone =" + phone +
-                "&number="+houseNum + "&block=" + blockNum + "&profile=" + profile
+                response = await response.json()
 
-				request.open('POST', 'http://35.198.5.41:3000/resident/new')
-                //request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-                request.setRequestHeader('Authorization', '<?php echo($_COOKIE['accessToken']);?>');
-				request.onreadystatechange = function(){					
-					if(request.readyState === 4) {
-						if(request.status === 200 || request.status === 201) { 
-							const updateResponse = JSON.parse(request.response)
-							alert(request.response)
-							document.cookie = "id =" + updateResponse.id;
-							document.cookie = "accesToken =" + updateResponse.token;
-							if(updateResponse.profile != null){
-								document.cookie = "permission =" + updateResponse.profile;
-							}else{
-								document.cookie = "permission =" + updateResponse.perfil;
-							}
-							window.location = 'http://192.168.25.61:366/SolNascente/front-end/panel'
-						}else{
-							alert("Senha ou CPF inválidos")
-						}
-            		}
-				}
-				//request.send(parameters)
+                alert(Object.values(response))
 			}
 
 

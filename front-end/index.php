@@ -26,33 +26,31 @@ session_start();
 			</form>
 		</div>
 		<script>
-			function ValidateLogin(){
+			async function ValidateLogin(){
 				let cpf = document.getElementById('cpf').value
 				let password = document.getElementById('password').value
-				let request = new XMLHttpRequest()
-				let parameters = 'cpf=' + cpf + '&password='+ password;
 
-				request.open('POST', 'http://35.198.5.41:3000/resident/login')
-				request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-				request.onreadystatechange = function(){					
-					if(request.readyState === 4) {
-						if(request.status === 200 || request.status === 201) { 
-							const updateResponse = JSON.parse(request.response)
-							alert(request.response)
-							document.cookie = "id =" + updateResponse.id;
-							document.cookie = "accessToken =" + updateResponse.token;
-							if(updateResponse.profile != null){
-								document.cookie = "permission =" + updateResponse.profile;
-							}else{
-								document.cookie = "permission =" + updateResponse.perfil;
-							}
-							window.location = 'http://192.168.25.61:366/SolNascente/front-end/panel'
-						}else{
-							alert("Senha ou CPF inválidos")
-						}
-            		}
+				const payload = JSON.stringify({ cpf, password })
+
+				let response= await fetch('http://localhost:3000/resident/login', {
+          headers: {
+						'Accept': 'application/json',
+            'Content-Type': 'application/json'
+					},  
+          method: 'post',
+          body: payload,
+        })
+
+				if(response.status === 200 || response.status === 201){
+					response = await response.json()
+					alert(Object.values(response))
+					document.cookie = "id =" + response.id
+					document.cookie = "accessToken =" + response.token
+					document.cookie = "permission =" + response.profile;
+					window.location = 'http://localhost/SolNascente/front-end/panel'
+				}else{
+					alert("Senha ou CPF inválidos")
 				}
-				request.send(parameters)
 			}
 		</script>
 	</body>
