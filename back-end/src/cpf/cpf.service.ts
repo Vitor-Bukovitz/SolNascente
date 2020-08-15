@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -22,7 +21,7 @@ export class Cpf {
   private static CPF_LOOSE_STRIP_REGEX = /[^\d]/g;
 
   private static cpfCheckDigit(digits: string): number {
-    const numbers: number[] = digits.split('').map(number => {
+    const numbers: number[] = digits.split('').map((number) => {
       return parseInt(number, 10);
     });
 
