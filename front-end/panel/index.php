@@ -59,7 +59,7 @@
                                 <select id="changeUserProfile">
                                     <option>morador</option>
                                     <option>zelador</option>
-                                    <option>sub-sindico</option>
+                                    <option>subsindico</option>
                                     <option>sindico</option>
                                 </select>
                             </div>
@@ -69,25 +69,42 @@
                         </form>
                     </div>
                     <div id ="modalLostAndFound" style="width:100%;height:100%" hidden>
-                        <form method="post">
+                        <table id="tableLostAndFound">
+                            <thead>
+                                <tr>
+                                    <td>id ticket</td>
+                                    <td>descrição</td>
+                                    <td>local</td> 
+                                    <td>encontrado por:</td>
+                                </tr>
+                            </thead>
+                            <tbody id="tableLostAndFoundBody">
+
+                            </tbody>
+                        </table>
+                        <form method="post" onsubmit="return false">
                             <div class="modalInputDiv">
-                                <label>Insira o nome do usuário que encontrou</label>
-                                <input type="text" placeholder="Nome">
+                                <label>Insira o número do ticket (caso já tenha sido criado)</label>
+                                <input type="number" placeholder="Id ticket" id="idTicket">
                             </div>
                             <div class="modalInputDiv">
-                                <label>Insira o nome do usuário que retirou</label>
-                                <input type="text" placeholder="Nome">
+                                <label>Insira o CPF do usuário que encontrou</label>
+                                <input type="text" placeholder="Cpf" id="lostAndFoundCpf1">
+                            </div>
+                            <div class="modalInputDiv">
+                                <label>Insira o CPF do usuário que retirou</label>
+                                <input type="text" placeholder="Cpf" id="lostAndFoundCpf2">
                             </div>
                             <div class="modalInputDiv">
                                 <label>Insira o local em que o item foi encontrado</label>
-                                <input type="text" placeholder="Local">
+                                <input type="text" placeholder="Local" id="lostAndFoundPlace">
                             </div>
                             <div class="modalInputDiv">
                                 <label>Insira uma descrição do item</label>
-                                <input type="text" placeholder="Descrição">
+                                <input type="text" placeholder="Descrição" id="lostAndFoundText">
                             </div>
                             <div class="modalInputDiv submitButton">
-                                <input type=submit value="Registrar">
+                                <input type=submit value="Registrar" onclick="LostAndFound()">
                             </div>
                         </form>
                     </div>
@@ -150,8 +167,7 @@
             echo($ModuleChangePerson);
             echo($ModuleLostAndFound);
             echo($ModulePartyRoom);
-            echo($ModuleRegisterTicket);
-        }else if($_GET['permission'] == 'morador'){
+        }else if($_COOKIE['permission'] == 'morador' || $_COOKIE['permission'] == 'zelador'){
             echo($ModuleLostAndFound);
             echo($ModulePartyRoom);
             echo($ModuleRegisterTicket);
@@ -163,14 +179,22 @@
         <script>            
 
             async function ChangeUser(){
-				let cpf = document.getElementById('changeUserCpf').value
+
+
+                let cpf = document.getElementById('changeUserCpf').value
                 let name = document.getElementById('changeUserName').value
                 let phone = document.getElementById('changeUserPhone').value
                 let houseNum = parseInt(document.getElementById('changeUserHouseNum').value)
                 let blockNum = parseInt(document.getElementById('changeUserBlockNum').value)
                 let password = document.getElementById('changeUserPass').value
                 let profile = document.getElementById('changeUserProfile').value
-
+                
+                if(profile == "zelador" || profile == "porteiro"){
+                    var url = 'http://35.198.5.41:3000/employee/new'
+                    var numSal = 1500.00;
+                }else{
+                    var url = 'http://35.198.5.41:3000/resident/new'
+                }
                 const payload = JSON.stringify({
                     name,
                     password,
@@ -178,30 +202,100 @@
                     telephone: phone,
                     number: houseNum,
                     block: blockNum,
-                    profile: 'morador',
+                    profile: profile,
+                    office: profile,
+                    salary: numSal,
                 })
-
-               let response = await fetch('http://35.198.5.41:3000/resident/new', {
+				
+               let response = await fetch(url, {
                     headers: {
                         'Accept': 'application/json',
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer <?php echo($_COOKIE['accessToken'])?>'
                     },
                     method: 'post',
                     body: payload,
                 })
 
                 response = await response.json()
-
-                alert(Object.values(response))
 			}
 
+            async function LostAndFound(){
+                let idTicket = parseInt(document.getElementById('idTicket').value)
+                let cpf1 = document.getElementById('lostAndFoundCpf1').value
+                let cpf2 = document.getElementById('lostAndFoundCpf2').value
+                let place = document.getElementById('lostAndFoundPlace').value
+                let text = document.getElementById('lostAndFoundText').value
 
+                if(idTicket == null){
+                    var payload = JSON.stringify({
+                        cpf: cpf1,
+                        local: place,
+                        description: text,
+                    })
+                }else{
+                    var payload = JSON.stringify({
+                    cpf: cpf2,
+                    id: idTicket,
+                    })
+                }          
+                
+                
+
+               let response = await fetch('http://35.198.5.41:3000/lost-and-found/new', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer  <?php echo($_COOKIE['accessToken'])?>'
+                    },
+                    method: 'post',
+                    body: payload,
+                })
+
+                response = await response.json()
+                GetLostAndFound()
+			}
+            
+            GetLostAndFound()
+
+            async function GetLostAndFound(){
+
+               let response = await fetch('http://35.198.5.41:3000/lost-and-found/list', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer  <?php echo($_COOKIE['accessToken'])?>'
+                    },
+                    method: 'get',
+                })
+
+                response = await response.json()
+                document.getElementById('tableLostAndFoundBody').parentNode.removeChild(document.getElementById('tableLostAndFoundBody'));
+                newTbody = document.createElement('tbody')
+                newTbody.setAttribute('id', 'tableLostAndFoundBody')
+                document.getElementById('tableLostAndFound').appendChild(newTbody)
+                response.forEach(MountTable)
+			}
+
+            function MountTable(element, index, array){
+                let row = document.createElement("tr")
+                
+                delete element.id_input_person
+                delete element.id_withdrawal_person                
+
+                for(i = 0;i < 4;i++){
+                    let data = document.createElement("td")
+                    data.innerHTML = Object.values(element)[i]
+                    row.appendChild(data)
+                }
+                document.getElementById('tableLostAndFoundBody').appendChild(row)
+            }
 
             function OpenModalChangeUser(){
                 document.getElementById('modalChangeUser').removeAttribute('hidden')
                 document.getElementById('modalLostAndFound').setAttribute('hidden', '')
                 document.getElementById('modalPartyRoom').setAttribute('hidden','')
-                document.getElementById('RegisterTicket').setAttribute('hidden','')
+                document.getElementById('modalRegisterTicket').setAttribute('hidden','')
             }
 
             function OpenModalLostAndFound(){
@@ -246,6 +340,5 @@
                 }
             }
         </script>
-
 	</body>
 </html>

@@ -33,21 +33,22 @@ session_start();
 				const payload = JSON.stringify({ cpf, password })
 
 				let response= await fetch('http://35.198.5.41:3000/resident/login', {
-          headers: {
-						'Accept': 'application/json',
-            'Content-Type': 'application/json'
-					},  
-          method: 'post',
-          body: payload,
-        })
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},  
+				method: 'post',
+				body: payload,
+				})
 
-				if(response.status === 200 || response.status === 201){
+				if((response.status === 200 || response.status === 201) && response.status != '401'){
 					response = await response.json()
 					alert(Object.values(response))
 					document.cookie = "id =" + response.id
 					document.cookie = "accessToken =" + response.token
 					document.cookie = "permission =" + response.profile;
-					window.location = 'http://35.198.5.41/panel'
+					//window.location = 'http://35.198.5.41/panel'
+					window.location = 'http://192.168.25.61:366/SolNascente/front-end/panel'
 				}else{
 					alert("Senha ou CPF inválidos")
 				}
