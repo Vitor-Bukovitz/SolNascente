@@ -181,7 +181,7 @@
                     profile: 'morador',
                 })
 
-               let response = await fetch('http://localhost:3000/resident/new', {
+               let response = await fetch('http://35.198.5.41:3000/resident/new', {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'

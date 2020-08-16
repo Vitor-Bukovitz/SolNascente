@@ -32,7 +32,7 @@ session_start();
 
 				const payload = JSON.stringify({ cpf, password })
 
-				let response= await fetch('http://localhost:3000/resident/login', {
+				let response= await fetch('http://35.198.5.41:3000/resident/login', {
           headers: {
 						'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -47,7 +47,7 @@ session_start();
 					document.cookie = "id =" + response.id
 					document.cookie = "accessToken =" + response.token
 					document.cookie = "permission =" + response.profile;
-					window.location = 'http://localhost/SolNascente/front-end/panel'
+					window.location = 'http://35.198.5.41/panel'
 				}else{
 					alert("Senha ou CPF inválidos")
 				}
