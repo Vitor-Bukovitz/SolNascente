@@ -29,46 +29,49 @@
                 </div>
                 <div id="modalContent">
                     <div id ="modalChangeUser" style="width:100%;height:100%" hidden>
-                        <form method="post" onsubmit="return false">
-                            <div class="modalInputDiv">
-                                <label>Insira o CPF do usuário</label>
-                                <input type="text" placeholder="CPF" id="changeUserCpf">
-                            </div>
-                            <div class="modalInputDiv">
-                                <label>Insira a senha do usuário</label>
-                                <input type="text" placeholder="Senha" id="changeUserPass">
-                            </div>
-                            <div class="modalInputDiv">
-                                <label>Insira o nome do usuário</label>
-                                <input type="text" placeholder="Nome" id="changeUserName">
-                            </div>
-                            <div class="modalInputDiv">
-                                <label>Insira o telefone do usuário</label>
-                                <input type="text" placeholder="Telefone" id="changeUserPhone">
-                            </div>
-                            <div class="modalInputDiv">
-                                <label>Insira o número da residência</label>
-                                <input type="number" placeholder="Número residência" id="changeUserHouseNum">
-                            </div>
-                            <div class="modalInputDiv">
-                                <label>Insira o bloco do usuário</label>
-                                <input type="number" placeholder="Bloco" id="changeUserBlockNum">
-                            </div>
-                            <div class="modalInputDiv">
-                                <label>Insira a permissão do usuário</label>
-                                <select id="changeUserProfile">
-                                    <option>morador</option>
-                                    <option>zelador</option>
-                                    <option>subsindico</option>
-                                    <option>sindico</option>
-                                </select>
-                            </div>
-                            <div class="modalInputDiv submitButton">
-                                <input type=submit value="Registrar" onclick="ChangeUser()">
-                            </div>
-                        </form>
+                        <div id="outterFormDiv">
+                            <form method="post" onsubmit="return false">
+                                <div class="modalInputDiv">
+                                    <label>Insira o CPF do usuário</label>
+                                    <input type="text" placeholder="CPF" id="changeUserCpf">
+                                </div>
+                                <div class="modalInputDiv">
+                                    <label>Insira a senha do usuário</label>
+                                    <input type="text" placeholder="Senha" id="changeUserPass">
+                                </div>
+                                <div class="modalInputDiv">
+                                    <label>Insira o nome do usuário</label>
+                                    <input type="text" placeholder="Nome" id="changeUserName">
+                                </div>
+                                <div class="modalInputDiv">
+                                    <label>Insira o telefone do usuário</label>
+                                    <input type="text" placeholder="Telefone" id="changeUserPhone">
+                                </div>
+                                <div class="modalInputDiv">
+                                    <label>Insira o número da residência</label>
+                                    <input type="number" placeholder="Número residência" id="changeUserHouseNum">
+                                </div>
+                                <div class="modalInputDiv">
+                                    <label>Insira o bloco do usuário</label>
+                                    <input type="number" placeholder="Bloco" id="changeUserBlockNum">
+                                </div>
+                                <div class="modalInputDiv">
+                                    <label>Insira a permissão do usuário</label>
+                                    <select id="changeUserProfile">
+                                        <option>morador</option>
+                                        <option>zelador</option>
+                                        <option>subsindico</option>
+                                        <option>sindico</option>
+                                    </select>
+                                </div>
+                                <div class="modalInputDiv submitButton">
+                                    <input type=submit value="Registrar" onclick="ChangeUser()">
+                                </div>
+                            </form>
+                        </div>
                     </div>
                     <div id ="modalLostAndFound" style="width:100%;height:100%" hidden>
+                        <div id="tableOutterDiv">
                         <table id="tableLostAndFound">
                             <thead>
                                 <tr>
@@ -82,9 +85,11 @@
 
                             </tbody>
                         </table>
+                        </div>
+                        <div id="outterFormDiv">
                         <form method="post" onsubmit="return false">
                             <div class="modalInputDiv">
-                                <label>Insira o número do ticket (caso já tenha sido criado)</label>
+                                <label>Insira o número do ticket (para tickets já criados)</label>
                                 <input type="number" placeholder="Id ticket" id="idTicket">
                             </div>
                             <div class="modalInputDiv">
@@ -92,7 +97,7 @@
                                 <input type="text" placeholder="Cpf" id="lostAndFoundCpf1">
                             </div>
                             <div class="modalInputDiv">
-                                <label>Insira o CPF do usuário que retirou</label>
+                                <label>Insira o CPF do usuário que retirou (para tickets já criados)</label>
                                 <input type="text" placeholder="Cpf" id="lostAndFoundCpf2">
                             </div>
                             <div class="modalInputDiv">
@@ -108,26 +113,45 @@
                             </div>
                         </form>
                     </div>
+                    </div>
                     <div id ="modalPartyRoom" style="width:100%;height:100%" hidden>
-                        <form method="post">
-                            <div class="modalInputDiv">
-                                <label>Insira o seu CPF</label>
-                                <input type="text" placeholder="CPF">
-                            </div>
-                            <div class="modalInputDiv">
-                                <label>Insira o horário de início</label>
-                                <input type="text" placeholder="ex. 12:30">
-                            </div>
-                            <div class="modalInputDiv">
-                                <label>Insira o horário de término</label>
-                                <input type="text" placeholder="ex. 12:30">
-                            </div>
-                            <div class="modalInputDiv submitButton">
-                                <input type=submit value="Registrar">
-                            </div>
-                        </form>
+                    <div id="tableOutterDiv">
+                        <table id="tablePartyRoom">
+                            <thead>
+                                <tr>
+                                    <td>Id reserva</td>
+                                    <td>Responsável</td>
+                                    <td>Inicio</td>
+                                    <td>Fim</td> 
+                                </tr>
+                            </thead>
+                            <tbody id="tablePartyRoomBody">
+
+                            </tbody>
+                        </table>
+                        </div>
+                        <div id="outterFormDiv">
+                            <form method="post" onsubmit="return false">
+                                <div class="modalInputDiv">
+                                    <label>Insira o seu CPF</label>
+                                    <input type="text" placeholder="CPF" id="partyRoomCpf">
+                                </div>
+                                <div class="modalInputDiv">
+                                    <label>Insira o horário de início</label>
+                                    <input type="text" placeholder="ex. 12:30" id="partyRoomStart">
+                                </div>
+                                <div class="modalInputDiv">
+                                    <label>Insira o horário de término</label>
+                                    <input type="text" placeholder="ex. 12:30" id="partyRoomEnd">
+                                </div>
+                                <div class="modalInputDiv submitButton">
+                                    <input type=submit value="Registrar" onclick="PartyRoom()">
+                                </div>
+                            </form>
+                        </div>
                     </div>
                     <div id ="modalRegisterTicket" style="width:100%;height:100%" hidden>
+                    <div id="outterFormDiv">
                         <form method="post">
                             <div class="modalInputDiv">
                                 <label>Insira o seu CPF</label>
@@ -150,6 +174,7 @@
                             </div>
                         </form>
                     </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -167,6 +192,7 @@
             echo($ModuleChangePerson);
             echo($ModuleLostAndFound);
             echo($ModulePartyRoom);
+            echo($ModuleRegisterTicket);
         }else if($_COOKIE['permission'] == 'morador' || $_COOKIE['permission'] == 'zelador'){
             echo($ModuleLostAndFound);
             echo($ModulePartyRoom);
@@ -274,10 +300,10 @@
                 newTbody = document.createElement('tbody')
                 newTbody.setAttribute('id', 'tableLostAndFoundBody')
                 document.getElementById('tableLostAndFound').appendChild(newTbody)
-                response.forEach(MountTable)
+                response.forEach(MountLostAndFoundTable)
 			}
 
-            function MountTable(element, index, array){
+            function MountLostAndFoundTable(element, index, array){
                 let row = document.createElement("tr")
                 
                 delete element.id_input_person
@@ -290,6 +316,74 @@
                 }
                 document.getElementById('tableLostAndFoundBody').appendChild(row)
             }
+
+            async function PartyRoom(){
+                let date = new Date(Date.now()).toISOString()
+                date = date.split('T')
+                
+                cpf = document.getElementById('partyRoomCpf').value
+                start = date[0] + ' ' + document.getElementById('partyRoomStart').value + ':00'
+                end = date[0] + ' ' + document.getElementById('partyRoomEnd').value + ':00'
+                
+                const payload = JSON.stringify({
+                    cpf: cpf,
+                    startReservation: start,
+                    endReservation: end,
+                })
+
+               let response = await fetch('http://35.198.5.41:3000/salon/new', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer  <?php echo($_COOKIE['accessToken'])?>'
+                    },
+                    method: 'post',
+                    body: payload,
+                })
+
+                response = await response.json()
+            }
+            GetPartyRoom()
+            async function GetPartyRoom(){
+
+               let response = await fetch('http://35.198.5.41:3000/salon/list', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer  <?php echo($_COOKIE['accessToken'])?>'
+                    },
+                    method: 'get',
+                })
+
+                response = await response.json()
+                document.getElementById('tablePartyRoomBody').parentNode.removeChild(document.getElementById('tablePartyRoomBody'));
+                newTbody = document.createElement('tbody')
+                newTbody.setAttribute('id', 'tablePartyRoomBody')
+                document.getElementById('tablePartyRoom').appendChild(newTbody)
+                response.forEach(MountPartyRoomTable)
+            }
+
+            function MountPartyRoomTable(element, index, array){
+                let row = document.createElement("tr")   
+                element.start_reservation = element.start_reservation.replace('T', ' ')
+                element.start_reservation = element.start_reservation.replace('Z', ' ')
+                element.start_reservation = element.start_reservation.replace(':00.000', ' ')
+
+
+                element.end_reservation = element.end_reservation.replace('T', ' ')
+                element.end_reservation = element.end_reservation.replace('Z', ' ')  
+                element.end_reservation = element.start_reservation.replace(':00.000', ' ')
+
+                //element.start_reservation.split(".")
+                tempObject = {id_reserva: element.id,name : element.name, start : element.start_reservation, end : element.end_reservation } 
+                for(i = 0;i < 4;i++){
+                    let data = document.createElement("td")
+                    data.innerHTML = Object.values(tempObject)[i]
+                    row.appendChild(data)
+                }
+                document.getElementById('tablePartyRoomBody').appendChild(row)
+            }
+
 
             function OpenModalChangeUser(){
                 document.getElementById('modalChangeUser').removeAttribute('hidden')
