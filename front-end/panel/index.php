@@ -75,10 +75,10 @@
                                 <div class="modalInputDiv">
                                     <label>Insira a permissão do usuário</label>
                                     <select id="changeUserProfile">
-                                        <option>morador</option>
-                                        <option>zelador</option>
-                                        <option>subsindico</option>
-                                        <option>sindico</option>
+                                        <option>Morador</option>
+                                        <option>Zelador</option>
+                                        <option>Subsíndico</option>
+                                        <option>Síndico</option>
                                     </select>
                                 </div>
                                 <div class="modalInputDiv submitButton">
@@ -92,10 +92,10 @@
                         <table id="tableLostAndFound">
                             <thead>
                                 <tr>
-                                    <td>id ticket</td>
-                                    <td>descrição</td>
-                                    <td>local</td> 
-                                    <td>encontrado por:</td>
+                                    <td>ID Ticket</td>
+                                    <td>Descriçãoo</td>
+                                    <td>Local</td> 
+                                    <td>Encontrado por:</td>
                                 </tr>
                             </thead>
                             <tbody id="tableLostAndFoundBody">
@@ -185,7 +185,7 @@
                         <table id="tableRegisterTicket">
                             <thead>
                                 <tr>
-                                    <td>Id reserva</td>
+                                    <td>ID Reserva</td>
                                     <td>Descrição</td>
                                     <td>Responsável</td>                                    
                                 </tr>
@@ -204,9 +204,9 @@
                             <div class="modalInputDiv">
                                 <label>Selecione o tipo de ocorrência</label>
                                 <select id="ticketType">
-                                    <option>pertubacao de sossego</option>
-                                    <option>horario limite utrapassado</option>
-                                    <option>outros</option>
+                                    <option>Pertubação de sossego</option>
+                                    <option>Horário limite utrapassado</option>
+                                    <option>Outros</option>
                                 </select>
                             </div>
                             <div class="modalInputDiv submitButton">
