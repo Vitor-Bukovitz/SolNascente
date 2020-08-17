@@ -1,7 +1,6 @@
 <?php
     require('./modules.php')
 ?>
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
@@ -28,7 +27,25 @@
                     <div id="modalTitle">Alteração / Cadastro de Usuário </div>
                 </div>
                 <div id="modalContent">
-                    <div id ="modalChangeUser" style="width:100%;height:100%" hidden>
+                    <div id ="modalChangeUser" hidden>
+                    <div id="tableOutterDiv">
+                        <table id="tableChangeUser">
+                            <thead>
+                                <tr>
+                                    <td>CPF</td>
+                                    <td>Nome</td>
+                                    <td>Telefone</td>
+                                    <td>Residencia</td> 
+                                    <td>Bloco</td> 
+                                    <td>Permissão</td>
+                                    <td>Deletar</td>
+                                </tr>
+                            </thead>
+                            <tbody id="tableChangeUserBody">
+
+                            </tbody>
+                        </table>
+                        </div>
                         <div id="outterFormDiv">
                             <form method="post" onsubmit="return false">
                                 <div class="modalInputDiv">
@@ -70,7 +87,7 @@
                             </form>
                         </div>
                     </div>
-                    <div id ="modalLostAndFound" style="width:100%;height:100%" hidden>
+                    <div id ="modalLostAndFound" hidden>
                         <div id="tableOutterDiv">
                         <table id="tableLostAndFound">
                             <thead>
@@ -86,7 +103,8 @@
                             </tbody>
                         </table>
                         </div>
-                        <div id="outterFormDiv">
+                    <?php if($_COOKIE['permission'] == 'zelador'){
+                echo(   '<div id="outterFormDiv">
                         <form method="post" onsubmit="return false">
                             <div class="modalInputDiv">
                                 <label>Insira o número do ticket (para tickets já criados)</label>
@@ -111,10 +129,22 @@
                             <div class="modalInputDiv submitButton">
                                 <input type=submit value="Registrar" onclick="LostAndFound()">
                             </div>
+                            <div class="modalInputDiv submitButton" style="color:grey;">
+                            (Tickets já retirados não aparecerão na listagem)
+                        </div>
                         </form>
+                    </div>');
+                    }else{
+                        echo('<div id="outterFormDiv">
+                        <form method="post" onsubmit="return false">
+                            <div class="modalInputDiv submitButton" style="color:grey;">
+                            (Apenas o zelador poderá cadastrar/alterar os itens listados acima)
+                        </div>
+                        </form>
+                    </div>');
+                    }  ?>
                     </div>
-                    </div>
-                    <div id ="modalPartyRoom" style="width:100%;height:100%" hidden>
+                    <div id ="modalPartyRoom" hidden>
                     <div id="tableOutterDiv">
                         <table id="tablePartyRoom">
                             <thead>
@@ -150,27 +180,37 @@
                             </form>
                         </div>
                     </div>
-                    <div id ="modalRegisterTicket" style="width:100%;height:100%" hidden>
+                    <div id ="modalRegisterTicket" hidden>
+                    <div id="tableOutterDiv">
+                        <table id="tableRegisterTicket">
+                            <thead>
+                                <tr>
+                                    <td>Id reserva</td>
+                                    <td>Descrição</td>
+                                    <td>Responsável</td>                                    
+                                </tr>
+                            </thead>
+                            <tbody id="tableRegisterTicketBody">
+
+                            </tbody>
+                        </table>
+                        </div>
                     <div id="outterFormDiv">
-                        <form method="post">
+                        <form method="post" onsubmit="return false">
                             <div class="modalInputDiv">
-                                <label>Insira o seu CPF</label>
-                                <input type="text" placeholder="CPF">
-                            </div>
-                            <div class="modalInputDiv">
-                                <label>Insira o horário da ocorrência</label>
-                                <input type="text" placeholder="ex. 12:30">
+                                <label>Insira o ID da reserva</label>
+                                <input type="number" placeholder="Id reserva" id="ticketId">
                             </div>
                             <div class="modalInputDiv">
                                 <label>Selecione o tipo de ocorrência</label>
-                                <select>
-                                    <option>Pertubação de sossego</option>
-                                    <option>Horário limite ultrapassado</option>
-                                    <option>Outros</option>
+                                <select id="ticketType">
+                                    <option>pertubacao de sossego</option>
+                                    <option>horario limite utrapassado</option>
+                                    <option>outros</option>
                                 </select>
                             </div>
                             <div class="modalInputDiv submitButton">
-                                <input type=submit value="Registrar">
+                                <input type=submit value="Registrar" onclick="RegisterTicket()">
                             </div>
                         </form>
                     </div>
@@ -202,7 +242,72 @@
         ?>
             </div>
         </div>
-        <script>            
+        <script>       
+
+            <?php if($_COOKIE['permission'] == 'sindico' || $_COOKIE['permission'] == 'subsindico'){
+                echo('GetChangeUser()');
+            }?>
+            async function GetChangeUser(){
+
+               let response = await fetch('http://35.198.5.41:3000/resident/list', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer  <?php echo($_COOKIE['accessToken'])?>'
+                    },
+                    method: 'get',
+                })
+
+                response = await response.json()
+                document.getElementById('tableChangeUserBody').parentNode.removeChild(document.getElementById('tableChangeUserBody'));
+                newTbody = document.createElement('tbody')
+                newTbody.setAttribute('id', 'tableChangeUserBody')
+                document.getElementById('tableChangeUser').appendChild(newTbody)
+                response.forEach(MountChangeUserTable)
+            }
+            function MountChangeUserTable(element, index, array){
+                row = document.createElement('tr')
+
+                tempObj = {cpf:element.cpf,name:element.name,telephone:element.telephone,number:element.number,block:element.block,profile:(element.profile||element.office)}
+
+                for(i = 0;i < 6;i++){
+                    let data = document.createElement("td")
+                    if(Object.values(tempObj)[i] == null){
+                        data.innerHTML = ''
+                    }else{
+                        data.innerHTML = Object.values(tempObj)[i]
+                    }
+                    row.appendChild(data)
+                }
+                let data = document.createElement("td")
+                data.innerHTML = '<img src="../src/images/delete.png" width="15px" id="deleteImage" onclick="DeleteUser(\''+element.cpf+'\')">'
+                row.appendChild(data)
+
+                document.getElementById('tableChangeUserBody').appendChild(row)
+            }
+
+            async function DeleteUser(userCpf){   
+
+                userCpf = userCpf.replace(/\./g,'')
+                userCpf = userCpf.replace('-','')
+
+                const payload = JSON.stringify({
+                    cpf:userCpf,
+                })
+				
+               let response = await fetch('http://35.198.5.41:3000/resident/delete', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer <?php echo($_COOKIE['accessToken'])?>'
+                    },
+                    method: 'delete',
+                    body: payload,
+                })
+
+                response = await response.json()
+                GetChangeUser()
+            }
 
             async function ChangeUser(){
 
@@ -244,30 +349,29 @@
                 })
 
                 response = await response.json()
+                GetChangeUser()
 			}
 
             async function LostAndFound(){
-                let idTicket = parseInt(document.getElementById('idTicket').value)
+                let idTicket = document.getElementById('idTicket').value
                 let cpf1 = document.getElementById('lostAndFoundCpf1').value
                 let cpf2 = document.getElementById('lostAndFoundCpf2').value
                 let place = document.getElementById('lostAndFoundPlace').value
                 let text = document.getElementById('lostAndFoundText').value
-
-                if(idTicket == null){
+                if(idTicket == null ||idTicket == ''){
                     var payload = JSON.stringify({
                         cpf: cpf1,
                         local: place,
                         description: text,
                     })
                 }else{
+                    idTicket = parseInt(idTicket)
                     var payload = JSON.stringify({
                     cpf: cpf2,
                     id: idTicket,
                     })
                 }          
                 
-                
-
                let response = await fetch('http://35.198.5.41:3000/lost-and-found/new', {
                     headers: {
                         'Accept': 'application/json',
@@ -279,6 +383,9 @@
                 })
 
                 response = await response.json()
+                if(response.message == 'enum not valid'){
+                    alert("Apenas zeladores podem cadastrar itens perdidos.")
+                }
                 GetLostAndFound()
 			}
             
@@ -342,6 +449,7 @@
                 })
 
                 response = await response.json()
+                GetPartyRoom()
             }
             GetPartyRoom()
             async function GetPartyRoom(){
@@ -372,9 +480,8 @@
 
                 element.end_reservation = element.end_reservation.replace('T', ' ')
                 element.end_reservation = element.end_reservation.replace('Z', ' ')  
-                element.end_reservation = element.start_reservation.replace(':00.000', ' ')
+                element.end_reservation = element.end_reservation.replace(':00.000', ' ')
 
-                //element.start_reservation.split(".")
                 tempObject = {id_reserva: element.id,name : element.name, start : element.start_reservation, end : element.end_reservation } 
                 for(i = 0;i < 4;i++){
                     let data = document.createElement("td")
@@ -382,6 +489,58 @@
                     row.appendChild(data)
                 }
                 document.getElementById('tablePartyRoomBody').appendChild(row)
+            }
+
+            async function RegisterTicket(){
+                ticketId = parseInt(document.getElementById('ticketId').value, 10)
+                description = document.getElementById('ticketType').value
+                const payload = JSON.stringify({
+                    idReservation: ticketId,
+                    description,
+                })
+
+               let response = await fetch('http://35.198.5.41:3000/occurrence/new', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer  <?php echo($_COOKIE['accessToken'])?>'
+                    },
+                    method: 'post',
+                    body: payload,
+                })
+
+                response = await response.json()
+                GetRegisterTicket()
+            }
+            GetRegisterTicket()
+             async function GetRegisterTicket(){
+
+               let response = await fetch('http://35.198.5.41:3000/occurrence/list', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer  <?php echo($_COOKIE['accessToken'])?>'
+                    },
+                    method: 'get',
+                })
+
+                response = await response.json()
+                document.getElementById('tableRegisterTicketBody').parentNode.removeChild(document.getElementById('tableRegisterTicketBody'));
+                newTbody = document.createElement('tbody')
+                newTbody.setAttribute('id', 'tableRegisterTicketBody')
+                document.getElementById('tableRegisterTicket').appendChild(newTbody)
+                response.forEach(MountRegisterTicketTable)
+            }
+
+            function MountRegisterTicketTable(element, index, array){
+                let row = document.createElement("tr")   
+                delete element.id
+                for(i = 0;i < 3;i++){
+                    let data = document.createElement("td")
+                    data.innerHTML = Object.values(element)[i]
+                    row.appendChild(data)
+                }
+                document.getElementById('tableRegisterTicketBody').appendChild(row)
             }
 
 

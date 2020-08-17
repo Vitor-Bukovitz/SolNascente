@@ -41,9 +41,8 @@ session_start();
 				body: payload,
 				})
 
-				if((response.status === 200 || response.status === 201) && response.status != '401'){
+				if((response.status === 200 || response.status === 201) && response.status != 401){
 					response = await response.json()
-					alert(Object.values(response))
 					document.cookie = "id =" + response.id
 					document.cookie = "accessToken =" + response.token
 					document.cookie = "permission =" + response.profile;
